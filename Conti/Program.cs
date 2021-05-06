@@ -1,14 +1,27 @@
 ﻿using System;
+using System.IO;
 
 namespace Conti
 {
+    enum Formato
+    {
+        Normale,
+        CSV
+    }
+
+
     class Program
     {
         private static Banca banca = new Banca();
+        private static string fileName = @"banca.csv";
 
         static void Main(string[] args)
         {
             Console.WriteLine("Benvenuta alla mia Banca");
+
+            Carica();
+
+            bool finito = false;
 
             do
             {
@@ -20,12 +33,8 @@ namespace Conti
                 Console.WriteLine("5. Visualizza dati di un conto");
                 Console.WriteLine("6. Visualizza prospetto completo");
                 Console.WriteLine("7. Elimina conto");
-                // CreaConto
-                // VersaSuConto
-                // PrelevaDaConto
-                // VisualizzaSaldo
-                // VisualizzaSaldoTotale
-                // ElminaConto
+                Console.WriteLine("8. Salva");
+                Console.WriteLine("9. Carica");
                 Console.WriteLine("0. Esci");
 
                 switch (Console.ReadKey().KeyChar)
@@ -51,17 +60,37 @@ namespace Conti
                     case '7':
                         EliminaConto();
                         break;
+                    case '8':
+                        Salva();
+                        break;
                     case '9':
-                        // Salva();
+                        Carica();
                         break;
                     case '0':
-                        return;
+                        finito = true;
+                        break;
                     default:
                         Console.WriteLine("\nScelta errata");
                         break;
                 }
+            } while (!finito);
 
-            } while (true);
+            Salva();
+        }
+
+        private static void Carica()
+        {
+            using (StreamReader sw = new StreamReader(fileName))
+            {
+                string contenuto = sw.ReadToEnd();
+                banca.Carica(contenuto);
+            }
+        }
+
+        private static void Salva()
+        {
+            using (StreamWriter sw = new StreamWriter(fileName))
+                sw.Write(banca.OttieniProspetto(Formato.CSV));
         }
 
         private static void EliminaConto()
@@ -80,7 +109,7 @@ namespace Conti
         private static void VisualizzaProspetto()
         {
             Console.WriteLine();
-            Console.WriteLine(banca.Prospetto);
+            Console.WriteLine(banca.OttieniProspetto(Formato.Normale));
         }
 
         private static void VisualizzaDatiConto()

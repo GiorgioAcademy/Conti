@@ -20,6 +20,17 @@ namespace Conti
         //    set { _saldo = value; }
         //}
 
+        // costruisce un oggetto conto recuperando le sue informazioni
+        // dalla stringa passata in formato Numero\tIntestatario\tSaldo
+        public Conto(string dati)
+        {
+            string[] parti = dati.Split('\t');
+
+            Numero = Convert.ToInt32(parti[0]);
+            Intestatario = parti[1];
+            Saldo = Convert.ToDecimal(parti[2]);
+        }
+
         public Conto(int num, string intestatario)
         {
             if (intestatario == null || intestatario.Length == 0)
@@ -33,7 +44,7 @@ namespace Conti
         public void Versa(decimal importo)
         {
             if (importo < 0)
-                throw new ArgumentOutOfRangeException(nameof(importo), 
+                throw new ArgumentOutOfRangeException(nameof(importo),
                     "L'importo non può essere negativo");
 
             Saldo += importo;
@@ -48,11 +59,16 @@ namespace Conti
             Saldo -= importo;
         }
 
-        public string Dati
+        public string OttieniDati(Formato formato)
         {
-            get
+            switch (formato)
             {
-                return $"Conto {Numero} intestato a {Intestatario}, saldo {Saldo:c}";
+                case Formato.Normale:
+                    return $"Conto {Numero} intestato a {Intestatario}, saldo {Saldo:c}";
+                case Formato.CSV:
+                    return $"{Numero}\t{Intestatario}\t{Saldo}";
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

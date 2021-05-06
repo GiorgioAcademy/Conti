@@ -9,15 +9,14 @@ namespace Conti
         private static int _num;    // per attribuire il numero al nuovo conto
 
         // prospetto che contiene tutti i dati di tutti i conti
-        public string Prospetto { get
-            {
-                string s = "";
+        public string OttieniProspetto(Formato formato)
+        {
+            string s = "";
 
-                foreach (Conto c in _conti.Values)
-                    s += c.Dati + '\n';
+            foreach (Conto c in _conti.Values)
+                s += c.OttieniDati(formato) + '\n';
 
-                return s;
-            }
+            return s;
         }
 
         public bool Esiste(int numero)
@@ -58,12 +57,28 @@ namespace Conti
 
         internal string OttieniDatiConto(int numero)
         {
-            return _conti[numero].Dati;
+            return _conti[numero].OttieniDati(Formato.Normale);
         }
 
         internal bool EliminaConto(int numero)
         {
             return _conti.Remove(numero);
+        }
+
+        internal void Carica(string contenuto)
+        {
+            _conti.Clear(); // rimuovo gli eventuali conti esistenti
+
+            string[] righe = contenuto.Split('\n');
+            foreach(string r in righe)
+            {
+                if (r == "")
+                    continue;
+
+                Conto c = new Conto(r);
+                _conti.Add(c.Numero, c);
+                _num = c.Numero;
+            }
         }
     }
 }
