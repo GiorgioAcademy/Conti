@@ -12,8 +12,6 @@ namespace Conti
         public string Intestatario { get; }
         public int Numero { get; }  // il numero del conto in questione
 
-        private static int _num;
-
         //private decimal _saldo;
 
         //public decimal Saldo
@@ -22,9 +20,12 @@ namespace Conti
         //    set { _saldo = value; }
         //}
 
-        public Conto(string intestatario)
+        public Conto(int num, string intestatario)
         {
-            Numero = ++_num;
+            if (intestatario == null || intestatario.Length == 0)
+                throw new ArgumentNullException();
+
+            Numero = num;
 
             Intestatario = intestatario;
         }
@@ -45,6 +46,14 @@ namespace Conti
                     "L'importo non può essere negativo");
 
             Saldo -= importo;
+        }
+
+        public string Dati
+        {
+            get
+            {
+                return $"Conto {Numero} intestato a {Intestatario}, saldo {Saldo:c}";
+            }
         }
     }
 }
