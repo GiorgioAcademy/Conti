@@ -6,15 +6,6 @@ namespace Conti
     {
         static void Main(string[] args)
         {
-            //Random r = new Random();
-
-            //r.Next(1, 91);
-
-            RandomSR r = new RandomSR(1, 91);
-
-            while (r.Rimasti > 0)
-                Console.WriteLine(r.Next);
-
             Conto c1 = new Conto("Pippo");
             Conto c2 = new Conto("Pluto");
 
